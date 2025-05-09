@@ -22,9 +22,16 @@ const PriceChart: React.FC<PriceChartProps> = ({ initialPrice }) => {
       const time = new Date(now);
       time.setMinutes(now.getMinutes() - i);
       
-      // Generate price with small variations around the initial price
-      const randomFactor = 0.99 + Math.random() * 0.02;
-      const price = i === 0 ? initialPrice : initialData[initialData.length - 1].price * randomFactor;
+      let price: number;
+      
+      if (i === 30) {
+        // First data point uses initialPrice directly
+        price = initialPrice;
+      } else {
+        // Generate price with small variations around the previous price
+        const randomFactor = 0.99 + Math.random() * 0.02;
+        price = initialData[initialData.length - 1]?.price * randomFactor || initialPrice;
+      }
       
       initialData.push({
         time: time.toLocaleTimeString(),
@@ -33,14 +40,22 @@ const PriceChart: React.FC<PriceChartProps> = ({ initialPrice }) => {
     }
     
     setData(initialData);
-    setCurrentPrice(initialData[initialData.length - 1].price);
-    setIsIncreasing(initialData[initialData.length - 1].price > initialData[initialData.length - 2].price);
+    
+    // Safely set current price and determine if increasing
+    if (initialData.length >= 2) {
+      setCurrentPrice(initialData[initialData.length - 1].price);
+      setIsIncreasing(initialData[initialData.length - 1].price > initialData[initialData.length - 2].price);
+    }
   }, [initialPrice]);
 
   // Update chart data with new prices
   useEffect(() => {
+    if (data.length === 0) return; // Don't update if there's no initial data
+    
     const interval = setInterval(() => {
       setData(prevData => {
+        if (prevData.length === 0) return prevData; // Safety check
+        
         const now = new Date();
         const randomFactor = 0.995 + Math.random() * 0.01;
         const newPrice = parseFloat((prevData[prevData.length - 1].price * randomFactor).toFixed(2));
@@ -58,7 +73,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ initialPrice }) => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [data]);
 
   const formatPrice = (value: number) => {
     return `$${value.toLocaleString('en-US')}`;
