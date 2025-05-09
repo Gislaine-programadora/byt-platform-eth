@@ -1,12 +1,92 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import Logo from '@/components/Logo';
+import TokenInfo from '@/components/TokenInfo';
+import PriceChart from '@/components/PriceChart';
+import WalletConnect from '@/components/WalletConnect';
+import TradingPanel from '@/components/TradingPanel';
 
 const Index = () => {
+  // Token data
+  const tokenData = {
+    price: 2798300,
+    supply: 12987200000,
+    symbol: "BYT",
+    weiBalance: 2987300000,
+    gasBalance: 7987400.00,
+    privateKey: "57ea7a2634cb4fd6dc5ab69cc63e551072a99f96b2e98172f86c5e629a4c83f2"
+  };
+
+  const [showPrivateKey, setShowPrivateKey] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState(tokenData.price);
+
+  const handlePriceUpdate = (newPrice: number) => {
+    setCurrentPrice(newPrice);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-coinbit-background to-[#12151f] text-white">
+      {/* Header */}
+      <header className="border-b border-coinbit-primary/20 bg-card/30 backdrop-blur-sm p-4">
+        <div className="container mx-auto flex justify-between items-center">
+          <Logo />
+          <Button 
+            className="bg-coinbit-primary hover:bg-coinbit-accent text-white"
+            onClick={() => window.open("https://ethereum.org", "_blank")}
+          >
+            Start Trading
+          </Button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto py-8 px-4">
+        {/* Token Overview */}
+        <div className="mb-6 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            CoinGBit (BYT)
+          </h1>
+          <p className="text-coinbit-text/80 max-w-2xl mx-auto">
+            Professional Ethereum token trading platform with real-time market data and secure wallet integration.
+          </p>
+        </div>
+
+        {/* Dashboard Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Chart */}
+            <PriceChart initialPrice={tokenData.price} />
+
+            {/* Token Info */}
+            <TokenInfo 
+              price={tokenData.price}
+              supply={tokenData.supply}
+              symbol={tokenData.symbol}
+              weiBalance={tokenData.weiBalance}
+              gasBalance={tokenData.gasBalance}
+            />
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6">
+            {/* Wallet Connect */}
+            <WalletConnect privateKey={tokenData.privateKey} />
+            
+            {/* Trading Panel */}
+            <TradingPanel currentPrice={currentPrice} />
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-coinbit-primary/20 bg-card/30 backdrop-blur-sm p-4 mt-8">
+        <div className="container mx-auto text-center text-sm text-coinbit-text/60">
+          <p>CoinGBit Token • ETH Mainnet • {new Date().getFullYear()}</p>
+          <p className="mt-1">Professional Crypto Trading Platform</p>
+        </div>
+      </footer>
     </div>
   );
 };
