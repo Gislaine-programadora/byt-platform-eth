@@ -20,15 +20,19 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 
 interface TradingPanelProps {
   currentPrice: number;
+  privateKey: string;
 }
 
-const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
+const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice, privateKey }) => {
   const [quantity, setQuantity] = useState<string>("1");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isTransferring, setIsTransferring] = useState(false);
   const [transactionComplete, setTransactionComplete] = useState(false);
   const [transactionType, setTransactionType] = useState<'buy' | 'sell'>('buy');
   const { toast } = useToast();
+  
+  // Usando o valor fixo de 2.357
+  const tokenPrice = 2.357;
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -46,7 +50,7 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
       setIsProcessing(false);
       setTransactionComplete(true);
       
-      const totalAmount = parseFloat(quantity) * 15;
+      const totalAmount = parseFloat(quantity) * tokenPrice;
       
       toast({
         title: action === 'buy' ? "Purchase Initiated" : "Sale Initiated",
@@ -65,20 +69,25 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
       setIsTransferring(false);
       setTransactionComplete(false);
       
-      const totalAmount = parseFloat(quantity) * 15;
+      const totalAmount = parseFloat(quantity) * tokenPrice;
       
       toast({
         title: transactionType === 'buy' ? "Purchase Successful" : "Sale Successful",
         description: transactionType === 'buy' 
-          ? `You bought ${quantity} CoinGBit for $${totalAmount.toFixed(2)} and transferred to your wallet`
-          : `You sold ${quantity} CoinGBit for $${totalAmount.toFixed(2)} and funds were transferred to your wallet`,
+          ? `You bought ${quantity} CoinGBit for $${totalAmount.toFixed(2)} and transferred to your wallet with key ending in ${privateKey.slice(-6)}`
+          : `You sold ${quantity} CoinGBit for $${totalAmount.toFixed(2)} and funds were transferred to your wallet with key ending in ${privateKey.slice(-6)}`,
       });
     }, 2000);
   };
 
   const calculateTotal = () => {
     const qty = parseFloat(quantity) || 0;
-    return (qty * 15).toFixed(2);
+    return (qty * tokenPrice).toFixed(3);
+  };
+
+  // Retorna os últimos 6 caracteres da chave privada para exibição
+  const getPrivateKeyShort = () => {
+    return privateKey.slice(-6);
   };
 
   return (
@@ -107,7 +116,7 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
               </div>
               <div>
                 <Label>Purchase Price</Label>
-                <Input value="$15.00" readOnly disabled className="mt-1" />
+                <Input value={`$${tokenPrice.toFixed(3)}`} readOnly disabled className="mt-1" />
               </div>
               <div>
                 <Label>Total</Label>
@@ -135,7 +144,7 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Confirm Purchase</AlertDialogTitle>
                       <AlertDialogDescription>
-                        You are about to purchase {quantity} CoinGBit tokens for ${calculateTotal()} and transfer them to your wallet with private key ending in ...4c83f2.
+                        You are about to purchase {quantity} CoinGBit tokens for ${calculateTotal()} and transfer them to your wallet with private key ending in ...{getPrivateKeyShort()}.
                         This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
@@ -169,7 +178,7 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
               </div>
               <div>
                 <Label>Selling Price</Label>
-                <Input value="$15.00" readOnly disabled className="mt-1" />
+                <Input value={`$${tokenPrice.toFixed(3)}`} readOnly disabled className="mt-1" />
               </div>
               <div>
                 <Label>Total</Label>
@@ -197,7 +206,7 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Confirm Sale</AlertDialogTitle>
                       <AlertDialogDescription>
-                        You are about to sell {quantity} CoinGBit tokens for ${calculateTotal()} and transfer the funds to your wallet with private key ending in ...4c83f2.
+                        You are about to sell {quantity} CoinGBit tokens for ${calculateTotal()} and transfer the funds to your wallet with private key ending in ...{getPrivateKeyShort()}.
                         This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>

@@ -8,9 +8,9 @@ import WalletConnect from '@/components/WalletConnect';
 import TradingPanel from '@/components/TradingPanel';
 
 const Index = () => {
-  // Token data
+  // Token data com chave privada definida
   const tokenData = {
-    price: 2798300,
+    price: 2357,
     supply: 12987200000,
     symbol: "BYT",
     weiBalance: 2987300000,
@@ -74,8 +74,11 @@ const Index = () => {
             {/* Wallet Connect */}
             <WalletConnect privateKey={tokenData.privateKey} />
             
-            {/* Trading Panel */}
-            <TradingPanel currentPrice={currentPrice} />
+            {/* Trading Panel com valor de 2.357 e chave privada */}
+            <TradingPanel 
+              currentPrice={currentPrice} 
+              privateKey={tokenData.privateKey} 
+            />
           </div>
         </div>
       </main>
