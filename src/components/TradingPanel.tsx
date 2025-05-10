@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowUp, ArrowDown, CheckCircle } from 'lucide-react';
+import { ArrowUp, ArrowDown, CheckCircle, X, Download, ExternalLink } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
 import { 
@@ -28,7 +28,9 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice, privateKey })
   const [isProcessing, setIsProcessing] = useState(false);
   const [isTransferring, setIsTransferring] = useState(false);
   const [transactionComplete, setTransactionComplete] = useState(false);
+  const [transactionSuccessful, setTransactionSuccessful] = useState(false);
   const [transactionType, setTransactionType] = useState<'buy' | 'sell'>('buy');
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
   const { toast } = useToast();
   
   // Usando o valor fixo de 2.357
@@ -68,6 +70,8 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice, privateKey })
     setTimeout(() => {
       setIsTransferring(false);
       setTransactionComplete(false);
+      setTransactionSuccessful(true);
+      setShowCompletionDialog(true);
       
       const totalAmount = parseFloat(quantity) * tokenPrice;
       
@@ -89,6 +93,28 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice, privateKey })
   const getPrivateKeyShort = () => {
     return privateKey.slice(-6);
   };
+
+  const handleCloseApplication = () => {
+    // Alertar o usuário que a aplicação será fechada
+    toast({
+      title: "Closing Application",
+      description: "Thank you for trading with CoinGBit!",
+    });
+
+    // Fechar a aplicação após um breve atraso (janela do navegador)
+    setTimeout(() => {
+      window.close();
+      // Fallback caso window.close não funcione devido às políticas do navegador
+      toast({
+        title: "Unable to close automatically",
+        description: "Please close your browser window manually.",
+        variant: "destructive",
+      });
+    }, 1000);
+  };
+
+  const currentDate = new Date().toLocaleDateString();
+  const transactionId = `TX-${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
 
   return (
     <Card className="bg-card/70 backdrop-blur-sm border border-coinbit-primary/20">
@@ -232,6 +258,80 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice, privateKey })
           Market rates may vary. Transaction fees not included.
         </div>
       </CardFooter>
+
+      {/* Modal de conclusão de transação */}
+      <Dialog open={showCompletionDialog} onOpenChange={setShowCompletionDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center text-green-500">
+              <CheckCircle className="mr-2" size={24} />
+              Transaction Complete
+            </DialogTitle>
+            <DialogDescription>
+              Your {transactionType === 'buy' ? 'purchase' : 'sale'} has been processed successfully.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="bg-muted/30 p-4 rounded-lg border border-green-200">
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Transaction ID:</span>
+                <span className="text-sm font-medium">{transactionId}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Date:</span>
+                <span className="text-sm font-medium">{currentDate}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Type:</span>
+                <span className="text-sm font-medium">{transactionType === 'buy' ? 'Purchase' : 'Sale'}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Amount:</span>
+                <span className="text-sm font-medium">{quantity} CoinGBit</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Price:</span>
+                <span className="text-sm font-medium">${tokenPrice.toFixed(3)}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Total:</span>
+                <span className="text-sm font-medium font-bold">${calculateTotal()}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Wallet:</span>
+                <span className="text-sm font-mono">...{getPrivateKeyShort()}</span>
+              </div>
+              
+              <div className="flex justify-between">
+                <span className="text-sm text-muted-foreground">Status:</span>
+                <span className="text-sm font-medium text-green-500">Completed</span>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter className="sm:justify-between flex-wrap gap-2">
+            <Button variant="outline" className="flex-1 sm:flex-none" onClick={() => setShowCompletionDialog(false)}>
+              <X className="mr-2 h-4 w-4" />
+              Close
+            </Button>
+            <Button className="flex-1 sm:flex-none bg-coinbit-primary hover:bg-coinbit-accent">
+              <Download className="mr-2 h-4 w-4" />
+              Download Receipt
+            </Button>
+            <Button onClick={handleCloseApplication} className="flex-1 sm:flex-none" variant="secondary">
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Exit Application
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };
