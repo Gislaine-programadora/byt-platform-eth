@@ -4,9 +4,19 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import { ArrowUp, ArrowDown, CheckCircle } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 interface TradingPanelProps {
   currentPrice: number;
@@ -15,6 +25,9 @@ interface TradingPanelProps {
 const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
   const [quantity, setQuantity] = useState<string>("1");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isTransferring, setIsTransferring] = useState(false);
+  const [transactionComplete, setTransactionComplete] = useState(false);
+  const [transactionType, setTransactionType] = useState<'buy' | 'sell'>('buy');
   const { toast } = useToast();
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,21 +38,42 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
   };
 
   const handleTransaction = (action: 'buy' | 'sell') => {
+    setTransactionType(action);
     setIsProcessing(true);
 
     // Simulate transaction processing
     setTimeout(() => {
       setIsProcessing(false);
+      setTransactionComplete(true);
       
       const totalAmount = parseFloat(quantity) * 15;
       
       toast({
-        title: action === 'buy' ? "Purchase Successful" : "Sale Successful",
+        title: action === 'buy' ? "Purchase Initiated" : "Sale Initiated",
         description: action === 'buy' 
-          ? `You bought ${quantity} CoinGBit for $${totalAmount.toFixed(2)}`
-          : `You sold ${quantity} CoinGBit for $${totalAmount.toFixed(2)}`,
+          ? `Preparing to buy ${quantity} CoinGBit for $${totalAmount.toFixed(2)}`
+          : `Preparing to sell ${quantity} CoinGBit for $${totalAmount.toFixed(2)}`,
       });
     }, 1500);
+  };
+
+  const handleConfirmTransfer = () => {
+    setIsTransferring(true);
+    
+    // Simulate transfer to private key
+    setTimeout(() => {
+      setIsTransferring(false);
+      setTransactionComplete(false);
+      
+      const totalAmount = parseFloat(quantity) * 15;
+      
+      toast({
+        title: transactionType === 'buy' ? "Purchase Successful" : "Sale Successful",
+        description: transactionType === 'buy' 
+          ? `You bought ${quantity} CoinGBit for $${totalAmount.toFixed(2)} and transferred to your wallet`
+          : `You sold ${quantity} CoinGBit for $${totalAmount.toFixed(2)} and funds were transferred to your wallet`,
+      });
+    }, 2000);
   };
 
   const calculateTotal = () => {
@@ -79,14 +113,45 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
                 <Label>Total</Label>
                 <Input value={`$${calculateTotal()}`} readOnly disabled className="mt-1" />
               </div>
-              <Button 
-                className="w-full bg-green-600 hover:bg-green-700"
-                onClick={() => handleTransaction('buy')}
-                disabled={isProcessing}
-              >
-                <ArrowUp className="mr-2 h-4 w-4" />
-                {isProcessing ? "Processing..." : "Buy CoinGBit"}
-              </Button>
+              
+              {!transactionComplete ? (
+                <Button 
+                  className="w-full bg-green-600 hover:bg-green-700"
+                  onClick={() => handleTransaction('buy')}
+                  disabled={isProcessing}
+                >
+                  <ArrowUp className="mr-2 h-4 w-4" />
+                  {isProcessing ? "Processing..." : "Buy CoinGBit"}
+                </Button>
+              ) : (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="w-full bg-coinbit-primary hover:bg-coinbit-accent">
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                      Confirm & Transfer to Wallet
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Confirm Purchase</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        You are about to purchase {quantity} CoinGBit tokens for ${calculateTotal()} and transfer them to your wallet with private key ending in ...4c83f2.
+                        This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleConfirmTransfer}
+                        disabled={isTransferring}
+                        className="bg-green-600 hover:bg-green-700"
+                      >
+                        {isTransferring ? "Transferring..." : "Confirm & Transfer"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </div>
           </TabsContent>
           
@@ -110,14 +175,45 @@ const TradingPanel: React.FC<TradingPanelProps> = ({ currentPrice }) => {
                 <Label>Total</Label>
                 <Input value={`$${calculateTotal()}`} readOnly disabled className="mt-1" />
               </div>
-              <Button 
-                className="w-full bg-red-600 hover:bg-red-700"
-                onClick={() => handleTransaction('sell')}
-                disabled={isProcessing}
-              >
-                <ArrowDown className="mr-2 h-4 w-4" />
-                {isProcessing ? "Processing..." : "Sell CoinGBit"}
-              </Button>
+              
+              {!transactionComplete ? (
+                <Button 
+                  className="w-full bg-red-600 hover:bg-red-700"
+                  onClick={() => handleTransaction('sell')}
+                  disabled={isProcessing}
+                >
+                  <ArrowDown className="mr-2 h-4 w-4" />
+                  {isProcessing ? "Processing..." : "Sell CoinGBit"}
+                </Button>
+              ) : (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="w-full bg-coinbit-primary hover:bg-coinbit-accent">
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                      Confirm & Transfer to Wallet
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Confirm Sale</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        You are about to sell {quantity} CoinGBit tokens for ${calculateTotal()} and transfer the funds to your wallet with private key ending in ...4c83f2.
+                        This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleConfirmTransfer}
+                        disabled={isTransferring}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
+                        {isTransferring ? "Transferring..." : "Confirm & Transfer"}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </div>
           </TabsContent>
         </Tabs>
