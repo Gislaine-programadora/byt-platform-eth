@@ -1,6 +1,7 @@
 # 💰 CoinGBit (BYT) – Plataforma de Trading Ethereum
 
-[CoinGBit Banner](https://copilot.microsoft.com/th/id/BCO.1ff3a935-ceb4-4c15-8553-9ec0f8b54de3.png)
+![CoinGBit Banner](https://copilot.microsoft.com/th/id/BCO.1ff3a935-ceb4-4c15-8553-9ec0f8b54de3.png)
+
 
 **CoinGBit** é uma plataforma profissional de negociação de tokens Ethereum, com dados de mercado em tempo real, integração segura com carteiras e suporte completo à rede Ethereum Mainnet.
 
