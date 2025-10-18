@@ -76,3 +76,34 @@ Copyright (c) 2025 Gislaine
 
 
 Feito com 💜 por Gislaine.
+
+
+<img src="https://copilot.microsoft.com/th/id/BCO.1ff3a935-ceb4-4c15-8553-9ec0f8b54de3.png" alt="CoinGBit Banner" height="200"/>
+
+# 💰 CoinGBit — Plataforma de Negociação Ethereum
+
+**CoinGBit (BYT)** é uma plataforma profissional de negociação de tokens Ethereum com dados de mercado em tempo real, painel de compra e venda, integração com carteira e visual moderno.
+
+🔗 [Acesse o projeto online](https://byt-platform-5ejxr5w0u-gislainelophes-7768s-projects.vercel.app/)  
+📦 [Repositório GitHub](https://github.com/Gislaine-programadora/byt-platform-eth)
+
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- Vite
+- TypeScript
+- React
+- Tailwind CSS
+- shadcn-ui
+
+---
+
+## 🛠️ Como Rodar Localmente
+
+```bash
+git clone https://github.com/Gislaine-programadora/byt-platform-eth.git
+cd byt-platform-eth
+npm install
+npm run dev
+
