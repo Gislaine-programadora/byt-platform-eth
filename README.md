@@ -1,73 +1,75 @@
-# Welcome to your Lovable project
+# 💰 CoinGBit (BYT) – Plataforma de Trading Ethereum
 
-## Project info
+**CoinGBit** é uma plataforma profissional de negociação de tokens Ethereum, com dados de mercado em tempo real, integração segura com carteiras e suporte completo à rede Ethereum Mainnet.
 
-**URL**: https://lovable.dev/projects/2ecae20b-798b-40a9-b661-ea8349f56935
+🔗 Acesse o projeto: [byt-platform-eth.vercel.app](https://byt-platform-eth.vercel.app/)
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 Funcionalidades
 
-**Use Lovable**
+- 📈 Painel de negociação com compra e venda de tokens BYT
+- 🔐 Conexão segura com carteira Ethereum
+- ⛽ Visualização de saldo em Wei e gás
+- 📊 Gráficos de preço em tempo real
+- 💸 Informações detalhadas do token BYT
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2ecae20b-798b-40a9-b661-ea8349f56935) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🧪 Tecnologias utilizadas
 
-**Use your preferred IDE**
+- **Next.js** para frontend moderno e rápido
+- **Web3.js / Ethers.js** para integração com Ethereum
+- **Vercel** para deploy contínuo
+- **Smart Contracts** na Ethereum Mainnet
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 📦 Instalação local
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+git clone https://github.com/seu-usuario/byt-platform.git
+cd byt-platform
+npm install
 npm run dev
-```
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+🛠️ Como contribuir
+Contribuições são bem-vindas! Siga os passos abaixo:
 
-**Use GitHub Codespaces**
+Faça um fork do projeto
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Crie uma branch: git checkout -b minha-feature
 
-## What technologies are used for this project?
+Commit suas alterações: git commit -m 'Minha nova feature'
 
-This project is built with:
+Push para o repositório: git push origin minha-feature
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Abra um Pull Request
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/2ecae20b-798b-40a9-b661-ea8349f56935) and click on Share -> Publish.
+🛠️ Como rodar o projeto localmente
 
-## Can I connect a custom domain to my Lovable project?
+# Clone o repositório
+git clone https://github.com/Gislaine-programadora/byt-platform-eth.git
 
-Yes, you can!
+# Acesse a pasta do projeto
+cd byt-platform-eth
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+# Instale as dependências
+npm install
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+# Inicie o servidor de desenvolvimento
+npm run dev
+
+
+📄 Licença
+Este projeto está licenciado sob a Licença MIT. Consulte o arquivo LICENSE para mais detalhes
+
+MIT License
+
+Copyright (c) 2025 Gislaine
+
+
+
+Feito com 💜 por Gislaine.
